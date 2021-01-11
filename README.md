@@ -7,7 +7,7 @@ QSMART estimates tissue bulk magnetic susceptibility maps from complex MRI image
 
 ## Installing QSMART
 
-1. Download QSMART [repository](https://github.com/wtsyeda/QSMART/archive/master.zip) 
+1. Download QSMART [repository](https://github.com/MBCIU/QSMART/archive/main.zip) 
 2. To install QSMART, a number of dependencies need to be available on your system, as listed below. These depedencies can be added to the MATLAB path or placed directly in the folder *'QSMART_toolbox_v1.0'*.
 
 Required dependencies:
