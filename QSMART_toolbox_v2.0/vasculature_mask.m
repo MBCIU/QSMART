@@ -13,7 +13,7 @@ n4_correct('AvgEcho.nii', 'AvgEcho_n4.nii', params);
 nii = load_nii('AvgEcho_n4.nii');
 AvgEcho_n4=nii.img;
 
-SE = strel('sphere',params.sph_radius_vasculature);
+SE = strel('sphere',max(1,round(to_voxels(params.sph_radius_vasculature,params))));
 test = imbothat(AvgEcho_n4,SE);
 nii = make_nii(test,vox); %%makes NIfTI image
 save_nii(nii,'test.nii');
@@ -38,7 +38,7 @@ end
 vasc_only=zeros(imsize(1:3));
 system(sprintf('cp %s .',mexEig3volume))
 mex eig3volume.c
-options = struct('FrangiScaleRange', params.frangi_scaleRange, 'FrangiScaleRatio', params.frangi_scaleRatio, 'FrangiAlpha', 0.5,...
+options = struct('FrangiScaleRange', to_voxels(params.frangi_scaleRange,params), 'FrangiScaleRatio', to_voxels(params.frangi_scaleRatio,params), 'FrangiAlpha', 0.5,...
           'FrangiBeta', 0.5, 'FrangiC', frangi_C, 'verbose',true,'BlackWhite',false);
 enhanced=FrangiFilter3D(test.*mask,options);
 nii = make_nii(enhanced,vox); %%makes NIfTI image

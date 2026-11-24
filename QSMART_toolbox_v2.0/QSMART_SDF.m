@@ -3,7 +3,7 @@ function lfs = QSMART_SDF(tfs,mask,R_0,vasc_only,stage,params)
 imsize=size(tfs);
 
 %Inward indents
-SE = strel('sphere',params.sdf_sp_radius);
+SE = strel('sphere',max(1,round(to_voxels(params.sdf_sp_radius,params))));
 fill = imclose(mask,SE);
 indent=double(fill-mask);
 

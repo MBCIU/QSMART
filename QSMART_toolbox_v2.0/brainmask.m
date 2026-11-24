@@ -29,7 +29,7 @@ end
 mask(BET_map<params.mag_threshold)=0;
 mask = bwmorph3(mask,'majority');
 % close the mask
-SE = strel('sphere',params.sph_radius1);
+SE = strel('sphere',max(1,round(to_voxels(params.sph_radius1,params))));
 mask = imclose(mask,SE);
 
 mask=double(mask);
