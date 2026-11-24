@@ -21,9 +21,23 @@ Additionally, please install the latest version of these software on your system
 * [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation)
 * [Advanced Normalization Tools (ANTs)](http://stnava.github.io/ANTs/)
 
+QSMART runs `N4BiasFieldCorrection` (ANTs) and `bet2` (FSL) from the system path that MATLAB sees, and stops with an error if either is missing. If MATLAB does not inherit your shell's path, add them with `setenv('PATH', [getenv('PATH') ':/path/to/ants/bin:/path/to/fsl/bin'])`.
+
 ## Usage
 
 The script *Demo_QSMART.m* calls the main *QSMART* function and contains a description of user-specified parameters. The parameter settings have been optimized for multiecho gradient echo data from Siemens 7T MRI scanner. To run *Demo_QSMART.m* on your data, please specifiy paths to phase and magnitude DICOM folders, and adjust parameters as needed.
+
+### Changes in v2.0
+
+Version 2.0 changes these defaults in *Demo_QSMART.m* so that QSMART works on data from different scanners and resolutions without retuning. Each change can be switched back to v1.0's behaviour.
+
+* **Frangi's c is set from the image** (`frangi_C_mode = 'relative'`): c = 0.25 × the median N4-corrected magnitude in the brain. A fixed c (`'absolute'`, v1.0's 500) depends on the scanner's intensity scale.
+* **Adaptive thresholds** (`adaptive_threshold = 1`): the brain-mask magnitude and echo-fit thresholds are percentiles of the data (2nd and 99th) rather than fixed values.
+* **Sizes in mm** (`size_units = 'mm'`): morphology radii and Frangi scales are in mm, converted with the mean voxel size. The defaults are v1.0's voxel values at the 0.6 mm resolution they were tuned on. `'voxels'` keeps v1.0's units.
+* **Repeatable runs**: N4 runs with a fixed thread count (`n4_threads = 1`).
+* **A warning when the vessel mask covers more than 20 % of the brain** (`vessel_coverage_warning`).
+* ANTs and FSL are run from the system path instead of with `module load`.
+* Small numerical fixes: the offset adjustment's k-space grid on odd matrix sizes, the constant left free by Laplacian unwrapping, and one gyromagnetic ratio throughout.
 
 ### QSMART Estimation Pipeline
 * Load complex image data from DICOMS (Magnitude and phase images)
