@@ -49,6 +49,20 @@ vasc_only(enhanced>T)=1;
 %vasc_only=bwmorph3(vasc_only,'bridge');
 
 vasc_only(find(~mask))=0;
+
+% Vessels are a few percent of the brain. A much larger share means the vessel settings do not
+% suit this data (often Otsu's threshold has collapsed to 0, see frangi_C_mode).
+coverage = sum(vasc_only(:)) / sum(mask(:) > 0);
+fprintf('Vessel mask covers %.1f%% of the brain mask \n', 100*coverage);
+max_coverage = 0.2;
+if isfield(params, 'vessel_coverage_warning') && ~isempty(params.vessel_coverage_warning)
+    max_coverage = params.vessel_coverage_warning;
+end
+if coverage > max_coverage
+    warning('QSMART:vesselCoverage', ['The vessel mask covers %.0f%% of the brain mask, which is implausibly ' ...
+        'large: check the vessel settings (frangi_C_mode, frangi_C, frangi_scaleRange, ' ...
+        'sph_radius_vasculature) and vasc_only.nii.'], 100*coverage);
+end
 vasc_only=double(~vasc_only);
 nii = make_nii(vasc_only,vox); %%makes NIfTI image
 save_nii(nii,'vasc_only.nii');

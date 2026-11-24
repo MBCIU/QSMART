@@ -50,6 +50,7 @@ qsm_params.frangi_scaleRatio=0.5;
 qsm_params.frangi_C_mode='relative';     % 'relative': c = frangi_C_factor x median brain magnitude; 'absolute': c = frangi_C
 qsm_params.frangi_C_factor=0.25;
 qsm_params.frangi_C=500;                  % used with frangi_C_mode='absolute'
+qsm_params.vessel_coverage_warning=0.2;   % warn if the vessel mask covers more than this fraction of the brain
 
 % Multiecho fit parameters
 qsm_params.fit_thresh_percentile=99;      % reliability map: remove voxels above this percentile of the fit residual
