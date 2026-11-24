@@ -35,10 +35,14 @@ qsm_params.coilcombmethod='smooth3';  % options: s(1) smooth3, (2) poly3, (3) po
 qsm_params.ph_unwrap_method='laplacian';    %options: 'laplacian','bestpath'
 
 % Threshold parameters
-qsm_params.mag_threshold=100;
+% With adaptive_threshold=1 (default), the brain-mask magnitude threshold and the echo-fit
+% threshold are percentiles of the data, so they work whatever the scanner's intensity scale.
+% With adaptive_threshold=0, the fixed values mag_threshold and fit_threshold are used instead.
+qsm_params.adaptive_threshold=1;
+qsm_params.mag_thresh_percentile=2;       % brain mask: remove voxels below this percentile of the BET image
+qsm_params.mag_threshold=100;             % fixed alternative (adaptive_threshold=0)
 qsm_params.sph_radius1=2;
 qsm_params.sph_radius_vasculature = 8;
-qsm_params.adaptive_threshold=0;
 
 % Frangi filter parameters
 qsm_params.frangi_scaleRange=[0.5 6];
@@ -46,7 +50,8 @@ qsm_params.frangi_scaleRatio=0.5;
 qsm_params.frangi_C=500;
 
 % Multiecho fit parameters
-qsm_params.fit_threshold=40;
+qsm_params.fit_thresh_percentile=99;      % reliability map: remove voxels above this percentile of the fit residual
+qsm_params.fit_threshold=40;              % fixed alternative (adaptive_threshold=0)
 
 % Background field removal
 
