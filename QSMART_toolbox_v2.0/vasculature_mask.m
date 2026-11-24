@@ -9,7 +9,7 @@ AvgEcho=mean(mag_corr,4);
 %
 nii = make_nii(AvgEcho,vox); %%makes NIfTI image
 save_nii(nii,'AvgEcho.nii');
-unix('module load ants/1.9.v4; N4BiasFieldCorrection -i AvgEcho.nii -o AvgEcho_n4.nii');
+n4_correct('AvgEcho.nii', 'AvgEcho_n4.nii', params);
 nii = load_nii('AvgEcho_n4.nii');
 AvgEcho_n4=nii.img;
 

@@ -6,7 +6,7 @@ clc; clear all; close all
 % at the Melbourne Brain Centre Imaging Unit.                       %
 %                                                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-addpath(genpath('./QSMART_toolbox_v1.0'));
+addpath(genpath('./QSMART_toolbox_v2.0'));
 
 %%% Defining data paths and string IDs%%%
   
@@ -24,6 +24,9 @@ qsm_params.field=7;                       % Tesla
 qsm_params.gyro=2.675e8;                  % Proton gyromagnetic ratio  
 qsm_params.datatype='DICOM_Siemens';      % options: DICOM_Siemens, BRUKER, 'AAR_Siemens', 'ZIP_Siemens'
 qsm_params.phase_encoding='unipolar';     % 'unipolar' or 'bipolar'
+
+% N4 bias field correction (ANTs): a fixed thread count makes repeated runs give the same result
+qsm_params.n4_threads=1;
 
 % Coil combination
 qsm_params.coilcombmethod='smooth3';  % options: s(1) smooth3, (2) poly3, (3) poly3_nlcg
