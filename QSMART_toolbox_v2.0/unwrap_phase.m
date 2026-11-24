@@ -6,7 +6,10 @@ if strcmp(ph_unwrap_method,'laplacian')
     disp('--> unwrap aliasing phase using laplacian...');
     Options.voxelSize = vox;
     for i = 1:imsize(4)
-        unph(:,:,:,i) = lapunwrap(ph_corr(:,:,:,i), Options);
+        unph_i = lapunwrap(ph_corr(:,:,:,i), Options);
+        % Laplacian unwrapping leaves each echo's constant free: lapunwrap's (k^2 + eps) makes it
+        % FFT rounding divided by eps. Set it to 0 so the result does not depend on rounding.
+        unph(:,:,:,i) = unph_i - mean(unph_i(:));
     end
     mkdir('laplacian');
     nii = make_nii(unph, vox);

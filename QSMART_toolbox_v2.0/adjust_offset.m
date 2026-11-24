@@ -18,13 +18,15 @@ FOVx = FOV(1);
 FOVy = FOV(2);
 FOVz = FOV(3);
 
-x = -Nx/2:Nx/2-1;
-y = -Ny/2:Ny/2-1;
-z = -Nz/2:Nz/2-1;
+% k-space grid matching fftn's sample positions, also for odd matrix sizes (v1.0's -N/2:N/2-1
+% was half a step off for odd N; for even N the two are identical)
+x = -floor(Nx/2):ceil(Nx/2)-1;
+y = -floor(Ny/2):ceil(Ny/2)-1;
+z = -floor(Nz/2):ceil(Nz/2)-1;
 [kx,ky,kz] = ndgrid(x/FOVx,y/FOVy,z/FOVz);
 D = 1/3 - (kx.*params.iminfo.z_prjs(1)+ky.*params.iminfo.z_prjs(2)+kz.*params.iminfo.z_prjs(3)).^2./(kx.^2 + ky.^2 + kz.^2);
 D(floor(Nx/2+1),floor(Ny/2+1),floor(Nz/2+1)) = 0;
-D = fftshift(D);
+D = ifftshift(D);
 
 
 x1 = ifftn(D.*fftn(removed_voxs));

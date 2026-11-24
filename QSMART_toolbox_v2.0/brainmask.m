@@ -8,10 +8,10 @@ mag1_sos = sqrt(sum(mag_all(:,:,:,1,:).^2,5));
 nii = make_nii(mag1_sos,vox); %%makes NIfTI image
 save_nii(nii,'mag1_sos.nii');
 %%bias field correction
-unix('module load ants/1.9.v4; N4BiasFieldCorrection -i mag1_sos.nii -o mag1_sos_n4.nii');
+n4_correct('mag1_sos.nii', 'mag1_sos_n4.nii', params);
 %%mask
 %(1) brain mask
-unix('module load fsl/5.0.9; bet2 mag1_sos_n4.nii BET -f 0.2 -m');
+run_tool('bet2', 'mag1_sos_n4.nii BET -f 0.2 -m', 'FSLOUTPUTTYPE=NIFTI_GZ');
 % set a lower threshold for postmortem
 % unix('bet2 mag1_sos.nii BET -f 0.1 -m');
 unix('gunzip -f BET.nii.gz');
@@ -29,7 +29,7 @@ end
 mask(BET_map<params.mag_threshold)=0;
 mask = bwmorph3(mask,'majority');
 % close the mask
-SE = strel('sphere',params.sph_radius1);
+SE = strel('sphere',max(1,round(to_voxels(params.sph_radius1,params))));
 mask = imclose(mask,SE);
 
 mask=double(mask);
