@@ -19,11 +19,27 @@ nii = make_nii(test,vox); %%makes NIfTI image
 save_nii(nii,'test.nii');
 
 
+% Frangi's c is in the magnitude's intensity units, and scanners scale magnitude very
+% differently, so a fixed c labels a few percent of one scan's brain as vessel and over half of
+% another's. With frangi_C_mode 'relative' (default), c is frangi_C_factor times the median
+% N4-corrected echo-mean magnitude inside the brain mask; with 'absolute', c is frangi_C.
+frangi_C = params.frangi_C;
+if ~isfield(params, 'frangi_C_mode') || strcmp(params.frangi_C_mode, 'relative')
+    brain_median = median(AvgEcho_n4(mask > 0));
+    if ~(isfinite(brain_median) && brain_median > 0)
+        error('QSMART:relativeC', 'A relative Frangi c needs a positive magnitude median inside the brain mask (got %g).', brain_median);
+    end
+    frangi_C = params.frangi_C_factor * brain_median;
+    fprintf('Setting Frangi c at %.4g (%.3g x the median brain magnitude) \n', frangi_C, params.frangi_C_factor);
+elseif ~strcmp(params.frangi_C_mode, 'absolute')
+    error('QSMART:frangiCMode', 'frangi_C_mode must be ''relative'' or ''absolute'' (got ''%s'').', params.frangi_C_mode);
+end
+
 vasc_only=zeros(imsize(1:3));
 system(sprintf('cp %s .',mexEig3volume))
 mex eig3volume.c
 options = struct('FrangiScaleRange', params.frangi_scaleRange, 'FrangiScaleRatio', params.frangi_scaleRatio, 'FrangiAlpha', 0.5,...
-          'FrangiBeta', 0.5, 'FrangiC', params.frangi_C, 'verbose',true,'BlackWhite',false);
+          'FrangiBeta', 0.5, 'FrangiC', frangi_C, 'verbose',true,'BlackWhite',false);
 enhanced=FrangiFilter3D(test.*mask,options);
 nii = make_nii(enhanced,vox); %%makes NIfTI image
 save_nii(nii,'enhanced.nii');

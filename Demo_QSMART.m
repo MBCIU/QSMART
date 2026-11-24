@@ -47,7 +47,9 @@ qsm_params.sph_radius_vasculature = 8;
 % Frangi filter parameters
 qsm_params.frangi_scaleRange=[0.5 6];
 qsm_params.frangi_scaleRatio=0.5;
-qsm_params.frangi_C=500;
+qsm_params.frangi_C_mode='relative';     % 'relative': c = frangi_C_factor x median brain magnitude; 'absolute': c = frangi_C
+qsm_params.frangi_C_factor=0.25;
+qsm_params.frangi_C=500;                  % used with frangi_C_mode='absolute'
 
 % Multiecho fit parameters
 qsm_params.fit_thresh_percentile=99;      % reliability map: remove voxels above this percentile of the fit residual
