@@ -21,7 +21,7 @@ qsm_params.mexEig3volume=which('eig3volume.c');
 % Scanner/Imaging Parameters
 qsm_params.species='human';               % 'human' or 'rodent'
 qsm_params.field=7;                       % Tesla
-qsm_params.gyro=2.675e8;                  % Proton gyromagnetic ratio  
+qsm_params.gyro=2*pi*42.575e6;            % Proton gyromagnetic ratio (rad/s/T), the value STI Suite's QSM_iLSQR uses
 qsm_params.datatype='DICOM_Siemens';      % options: DICOM_Siemens, BRUKER, 'AAR_Siemens', 'ZIP_Siemens'
 qsm_params.phase_encoding='unipolar';     % 'unipolar' or 'bipolar'
 
